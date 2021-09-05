@@ -1009,15 +1009,18 @@ static void create_main_file_id(SourceManager &SM, const FileEntry *file)
 
 #endif
 
+#define SETLANGDEFAULTS_TAKES_5_ARGUMENTS
+
 #ifdef SETLANGDEFAULTS_TAKES_5_ARGUMENTS
 
 static void set_lang_defaults(CompilerInstance *Clang)
 {
-	PreprocessorOptions &PO = Clang->getPreprocessorOpts();
-	TargetOptions &TO = Clang->getTargetOpts();
-	llvm::Triple T(TO.Triple);
-	CompilerInvocation::setLangDefaults(Clang->getLangOpts(), IK_C, T, PO,
-					    LangStandard::lang_unspecified);
+ PreprocessorOptions &PO = Clang->getPreprocessorOpts();
+ std::vector<std::string> &includes = PO.Includes;
+ TargetOptions &TO = Clang->getTargetOpts();
+ llvm::Triple T(TO.Triple);
+ CompilerInvocation::setLangDefaults(Clang->getLangOpts(), IK_C, T, includes,
+         LangStandard::lang_unspecified);
 }
 
 #else
